@@ -5,6 +5,10 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 
 public class Casilla extends JButton {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private 	Posicion posicion;
 	
 	public Casilla() {

@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 
 import ParteServidor.Historico;
+import logica.Barcos;
 import logica.Casilla;
 import logica.Juego;
 import logica.MetodosHilos;
@@ -17,7 +18,10 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Timer;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -51,7 +55,7 @@ public class InterfazGrafica {
 		
 		initialize();
 		MetodosHilos.metodolectura(this.juego, this);
-		MetodosHilos.finalizaTimer();
+
 	
 	}
 
@@ -75,6 +79,8 @@ public class InterfazGrafica {
 		 panel = new JPanel();
 		panel.setBounds(49, 43, 294, 264);
 		frame.getContentPane().add(panel);
+		
+
 		panel.setLayout(new GridLayout(10, 10, 0, 0));
 		for(int i=0;i<10;i++) {
 			for(int j=0;j<10;j++) {
@@ -165,15 +171,16 @@ public class InterfazGrafica {
 
 		JOptionPane.showMessageDialog(this.frame,cuerpo, "Mi comandante", JOptionPane.INFORMATION_MESSAGE);
 
-		int reply=JOptionPane.showConfirmDialog(this.frame,"Quieres Volver a Intentarlo","Mi comandante", JOptionPane.YES_NO_OPTION);
-		if(reply==JOptionPane.NO_OPTION) {
+	
 			this.juego.cerrar();
-			MetodosHilos.finalizarelpool();
+			MetodosHilos.timer=new Timer();
+			Menu f=new Menu(new Juego(new Barcos()));
+			f.Mostrar();
 			
-		}
+			frame.setVisible(false);
+			frame.dispose(); 
 		
-		frame.setVisible(false);
-		frame.dispose(); 
+
 		
 	}
 
@@ -221,18 +228,7 @@ public class InterfazGrafica {
 		
 	}
 
-	public void finvist() {
-		int reply=JOptionPane.showConfirmDialog(this.frame,"La Patida finalizo","Finalizado", JOptionPane.INFORMATION_MESSAGE);
-		if(reply==JOptionPane.OK_OPTION) {
-			this.juego.cerrar();
-			
-		}
-		
-		frame.setVisible(false);
-		frame.dispose(); 
-		
-		
-	}
+	
 
 	public void tuturno() {
 	JOptionPane.showConfirmDialog(this.frame,"Tu turno","Mi comandante", JOptionPane.DEFAULT_OPTION);		

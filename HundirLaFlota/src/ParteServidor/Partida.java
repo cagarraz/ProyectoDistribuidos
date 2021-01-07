@@ -20,13 +20,34 @@ public class Partida extends Thread{
 	private ObjectOutputStream out2 ;
 	private ObjectInputStream in2;
 	private List<Historico> listajugador;
-
-
+	public CountDownLatch cuentalista=new CountDownLatch(1);
+	private CountDownLatch count=new CountDownLatch(1);
+	private boolean vivo=true;
+	
+	private Socket jugador1;
+	private Socket jugador2;
+	private String nombre1;
+	private String nombre2;
+	private List<Posicion> barcojug1;
+	private List<Posicion> barcojug2;
 
 	
-	private static int numero=-1;
+	private static int numero=0;
 	private  int id=factoria();
 	
+	public boolean isvivo( ) {
+		return this.vivo;
+	}
+	
+	
+	public String nombre1( ) {
+		return this.nombre1;
+	}
+	public String nombre2( ) {
+		return this.nombre2;
+	}
+
+
 
 
 
@@ -45,12 +66,7 @@ public class Partida extends Thread{
 	}
 
 
-	private Socket jugador1;
-	private Socket jugador2;
-	private String nombre1;
-	private String nombre2;
-	private List<Posicion> barcojug1;
-	private List<Posicion> barcojug2;
+	
 	public List<Posicion> getBarcojug1guard() {
 		return barcojug1guard;
 	}
@@ -64,8 +80,8 @@ public class Partida extends Thread{
 
 
 
-	private List<Posicion> barcojug1guard=new ArrayList<Posicion>();
-	private List<Posicion> barcojug2guard=new ArrayList<Posicion>();
+	private List<Posicion> barcojug1guard=null;
+	private List<Posicion> barcojug2guard=null;
 
 	private boolean finalizado;
 	public boolean isFinalizado() {
@@ -77,7 +93,7 @@ public class Partida extends Thread{
 
 	
 	
-	private CountDownLatch count=new CountDownLatch(1);
+
 	
 	
 	private static synchronized   int  factoria() {
@@ -87,19 +103,22 @@ public class Partida extends Thread{
 	}
 
 		
-	public Partida(ObjectOutputStream out, ObjectInputStream in, String nombre1) {
+	public Partida(ObjectOutputStream out, ObjectInputStream in, String nombre1, Socket soc) {
 		this.out1=out;
+		this.jugador1=soc;
 		this.in1=in;
 		this.nombre1=nombre1;
 		this.listajugador=new ArrayList<Historico>();
+		this.jugador2=null;
 	
 
 	}
 	public  int numero() {
 		return this.id;
 	}
-	public void unirjugador(ObjectOutputStream out, ObjectInputStream in,String nombre) {
+	public void unirjugador(ObjectOutputStream out, ObjectInputStream in,String nombre,Socket soc) {
 		nombreJugador2(nombre);
+		this.jugador2=soc;
 		this.out2=out;
 		this.in2=in;
 		count.countDown();
@@ -134,9 +153,9 @@ public class Partida extends Thread{
 			this.barcojug1=	((Protocolo<List<Posicion>>)in1.readObject()).getCuerpo();
 				
 			this.barcojug2=((Protocolo<List<Posicion>>)in2.readObject()).getCuerpo();
-				
-			this.barcojug1guard.addAll(barcojug1);
-			this.barcojug2guard.addAll(barcojug2);
+			cuentalista.countDown();
+			this.barcojug1guard =new ArrayList<Posicion>(this.barcojug1);
+			this.barcojug2guard =new ArrayList<Posicion>(this.barcojug2);
 				
 				out1.writeObject(new Protocolo<String>("NombreJug",this.nombre1));	
 				out1.writeObject(new Protocolo<String>("NombreCont",this.nombre2));	
@@ -238,20 +257,46 @@ public class Partida extends Thread{
 				
 				 
 					 
-					
-					
+										
 					
 			 catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+				this.vivo=false;
+				
+				}
+				
+				
+			 catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				
 			}
+		finally {
+			try {
+				
+				out1.close();
+				in1.close();
+				this.jugador1.close();
+				if(this.jugador2!=null) {
+				out2.close();
+				in2.close();
+				this.jugador2.close();}
+		
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				
+			
 		}
+		
+		} 
+	
+
 	}
 
 			

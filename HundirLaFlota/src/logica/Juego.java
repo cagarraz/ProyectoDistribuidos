@@ -52,10 +52,10 @@ public class Juego {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			this.sock = null;
+		}
 		}
 
-	}
+	
 
 	public void UnirseEspectador(int numero) {
 		this.sock = null;
@@ -70,7 +70,7 @@ public class Juego {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			this.sock = null;
+
 		}
 
 	}
@@ -82,9 +82,9 @@ public class Juego {
 
 		try {
 
-			Protocolo pro = null;
+			Protocolo<?> pro = null;
 
-			while (!((pro = (Protocolo) in.readObject()).getTipo()).equals("Finalizado")) {
+			while (!((pro = (Protocolo<?>) in.readObject()).getTipo()).equals("Finalizado")) {
 
 				if (pro.getTipo().equals("Jugadorhisto")) {
 
@@ -101,6 +101,18 @@ public class Juego {
 					f.anadirjug2((List<Posicion>)pro.getCuerpo());
 					}
 
+	
+				if (pro.getTipo().equals("Nombre1")) {
+
+					f.nombreCont((String)pro.getCuerpo());
+					
+					}
+				if (pro.getTipo().equals("Nombre2")) {
+
+					f.nombreJug((String)pro.getCuerpo());
+					
+					}
+				
 			
 
 				}
@@ -129,8 +141,9 @@ public class Juego {
 	}
 	
 
-	public void Unirse(int numero) {
+	public boolean Unirse(int numero) {
 		this.sock = null;
+
 		try {
 			sock = new Socket("localhost", 6666);
 			out = new ObjectOutputStream(sock.getOutputStream());
@@ -138,14 +151,24 @@ public class Juego {
 
 			out.writeObject(new Protocolo<Integer>("Unirse", numero));
 			out.flush();
+			Protocolo<?> pro = null;
+			pro= (Protocolo)in.readObject();
+		if(pro.getTipo().equals("OK"))	{
 			out.writeObject(new Protocolo<String>("Nombre", this.barc.getNombre()));
 			out.flush();
+		return true;
+		}
+	
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			this.sock = null;
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return false;
 
 	}
 
@@ -171,7 +194,7 @@ public class Juego {
 
 		try {
 
-			Protocolo pro = null;
+			Protocolo<?> pro = null;
 
 			while (!((pro = (Protocolo) in.readObject()).getTipo()).equals("Fin")) {
 

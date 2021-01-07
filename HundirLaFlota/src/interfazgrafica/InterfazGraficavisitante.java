@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 
 import ParteServidor.Historico;
+import logica.Barcos;
 import logica.Casilla;
 import logica.Juego;
 import logica.MetodosHilos;
@@ -15,9 +16,10 @@ import logica.Posicion;
 
 import java.awt.Color;
 import java.awt.GridLayout;
-
-import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Timer;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -52,7 +54,7 @@ public class InterfazGraficavisitante {
 		
 		
 		initialize();
-		MetodosHilos.finalizaTimer();
+
 	
 	}
 
@@ -72,6 +74,7 @@ public class InterfazGraficavisitante {
 		frame.setBounds(100, 100, 400, 701);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+
 		
 		 panel = new JPanel();
 		panel.setBounds(49, 43, 294, 264);
@@ -165,13 +168,17 @@ public class InterfazGraficavisitante {
 	
 
 	public void finvist() {
-		int reply=JOptionPane.showConfirmDialog(this.frame,"La Patida finalizo","Finalizado", JOptionPane.OK_OPTION);
-	if(reply==JOptionPane.OK_OPTION) {
-		}
-		this.juego.cerrar();
-		frame.setVisible(false);
-		
-		frame.dispose(); 
+
+		JOptionPane.showMessageDialog(this.frame,"Fin de la partida", "Mi comandante", JOptionPane.INFORMATION_MESSAGE);
+
+	
+			this.juego.cerrar();
+			MetodosHilos.timer=new Timer();
+			Menu f=new Menu(new Juego(new Barcos()));
+			f.Mostrar();
+			
+			frame.setVisible(false);
+			frame.dispose(); 
 		
 
 		

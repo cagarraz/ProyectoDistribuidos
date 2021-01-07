@@ -1,56 +1,46 @@
 package interfazgrafica;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dialog.ModalityType;
+
 
 import javax.swing.JButton;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
+
 
 
 import logica.Barcos;
 import logica.Juego;
 import logica.MetodosHilos;
-import logica.Protocolo;
-import logica.Juego;
 
-import javax.swing.BoxLayout;
+
+
 import javax.swing.DefaultListModel;
 
-import java.awt.FlowLayout;
-import javax.swing.JTabbedPane;
+
 import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
+
 import javax.swing.JList;
-import javax.swing.JOptionPane;
+
 
 import net.miginfocom.swing.MigLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 
 public class Menu extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JFrame frame;
 	private Barcos barcos;
 	private JTextField txtJugador;
@@ -58,8 +48,9 @@ public class Menu extends JFrame {
 	private	JList <Integer> list_1;
 	private	DefaultListModel<Integer> model;
 	private	DefaultListModel<Integer> listaver;
-	
-	Juego jueg;
+	private 	Juego jueg;
+
+
 
 
 
@@ -72,12 +63,16 @@ public class Menu extends JFrame {
 	 * Create the application.
 	 * @param listaver 
 	 */
-	public Menu(Juego juego,DefaultListModel<Integer> lista, DefaultListModel<Integer> listaver) {
-		this.model=lista;
-		this.listaver=listaver;
+	public Menu(Juego juego) {
+
+		this.model= new DefaultListModel<Integer>();
+		this.listaver= new DefaultListModel<Integer>();
+		initialize();
+		MetodosHilos.metodotimer(model);
+		MetodosHilos.metodotimer2(listaver);
 		this.barcos=juego.getBarc();
 		this.jueg=juego;
-		initialize();
+	
 
 
 	}
@@ -99,6 +94,7 @@ public class Menu extends JFrame {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(0, 2, 0, 0));
+
 		
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel);
@@ -144,6 +140,10 @@ public class Menu extends JFrame {
 				
 			}
 		});
+		
+		
+
+		
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
 		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 0);
 		gbc_btnNewButton_1.gridx = 2;
@@ -210,9 +210,17 @@ public class Menu extends JFrame {
 			}
 			
 		});
+		 
+		 
 		
 		panel_4_1_1.add(list_1, "cell 1 1 7 2,grow");
-	}
+
+
+
+		
+	
+
+		}
 
 	protected void UnirseVisitante(int index) {
 		this.jueg.UnirseEspectador( index);
@@ -227,28 +235,24 @@ public class Menu extends JFrame {
 
 	protected void crearFlotaUnirse(int index) {
 		this.barcos.setNombre(nombre());
-		this.jueg.Unirse( index);
-	
+		boolean corr=this.jueg.Unirse( index);
+	if(corr) {
 		Flota f=new Flota(this.jueg);
 		f.mostrar();
 		frame.dispose();
-		
 
+		MetodosHilos.finalizaTimer();
+		
+	}
 
 		
 		
 	}
-	protected void Unirse(int index) {
-		this.jueg.Unirse( index);
 
-
-		frame.dispose();
-		
-	}
 	
 
 
-
+	
 
 
 
@@ -263,13 +267,21 @@ public class Menu extends JFrame {
 	
 		Flota f=new Flota(this.jueg);
 		f.mostrar();
+		frame.setVisible(false);
 		frame.dispose();
-	
+		MetodosHilos.finalizaTimer();
 	
 	
 	
 
 	}
+
+
+
+
+
+
+
 
 	
 	

@@ -14,9 +14,10 @@ import javax.swing.DefaultListModel;
 
 import interfazgrafica.InterfazGrafica;
 import interfazgrafica.InterfazGraficavisitante;
+import interfazgrafica.Menu;
 
 public class MetodosHilos {
-public static 	ExecutorService pool=Executors.newCachedThreadPool();
+
 public static 	Timer timer=new Timer();
 	
 
@@ -34,7 +35,7 @@ public static 	Timer timer=new Timer();
 					
 				}
 			});
-		pool.execute(t);
+	t.start();
 
 		
 	}
@@ -50,7 +51,7 @@ public static 	Timer timer=new Timer();
 					
 				}
 			});
-		pool.execute(t);
+	t.start();
 
 		
 	}
@@ -59,7 +60,7 @@ public static 	Timer timer=new Timer();
 	
 public static void metodotimer(DefaultListModel<Integer> lista) {
 	timer.schedule(new TimerTask() {
-		
+
 		@Override
 		public void run() {
 			try(	Socket sock=new Socket("localhost",6666);
@@ -73,9 +74,11 @@ public static void metodotimer(DefaultListModel<Integer> lista) {
 					lista.removeAllElements();
 				int tam=	listas.getCuerpo().size();
 				for(int i=0;i<tam;i++) {
-					lista.add(i, listas.getCuerpo().get(i));
+					lista.addElement(listas.getCuerpo().get(i));
 				
 				}
+			
+	
 				
 				
 					
@@ -90,7 +93,7 @@ public static void metodotimer(DefaultListModel<Integer> lista) {
 
 				
 			}
-		}, 2000);
+		},0, 3000);
 }
 
 
@@ -116,7 +119,6 @@ public static void metodotimer2(DefaultListModel<Integer> listaver) {
 				
 				}
 			
-			
 				
 			}
 			 catch (ClassNotFoundException e) {
@@ -129,7 +131,7 @@ public static void metodotimer2(DefaultListModel<Integer> listaver) {
 
 			
 		}
-	}, 2000);
+	},0, 3000);
 }
 
 public static  void finalizaTimer() {
@@ -138,10 +140,7 @@ public static  void finalizaTimer() {
 	
 }
 
-public static  void finalizarelpool() {
-	pool.shutdown();
-	
-}
+
 
 	
 	

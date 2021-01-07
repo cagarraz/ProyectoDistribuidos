@@ -1,37 +1,34 @@
 package interfazgrafica;
 
-import java.awt.EventQueue;
+
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.eclipse.swt.events.FocusEvent;
+
 
 import logica.Barco;
-import logica.Barcos;
+
 import logica.Casilla;
 import logica.Juego;
+import logica.MetodosHilos;
 import logica.Posicion;
 
-import java.awt.BorderLayout;
+
 import java.awt.Color;
-import java.awt.Component;
+
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 
-import java.awt.event.FocusAdapter;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+
 
 public class Flota   {
 
@@ -148,6 +145,7 @@ public class Flota   {
 
 		}
 
+		
 	}
 
 	public void guardar() {

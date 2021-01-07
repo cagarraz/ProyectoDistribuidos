@@ -40,9 +40,10 @@ private static List<Partida> visita=new ArrayList<Partida>();
 	  		Integer l=	(Integer)(prot.getCuerpo());
 			
 	  		for(int i=0;i<visita.size();i++) {
-	  			if(visita.get(i).numero()==l) {
+	  			if(visita.get(i).numero()==l && visita.get(i).isvivo()) {
 	  				PartidaVisitante par=new PartidaVisitante(out, in, 	visita.get(i));
 	  			}
+	  	
 	  		}
 	  	
 		  
@@ -53,23 +54,34 @@ private static List<Partida> visita=new ArrayList<Partida>();
 		  	if(prot.getTipo().equals("Crear")) {
 		  		
 		  	 	
-		  		Partida f=new Partida(out,in,(String)prot.getCuerpo());
+		  		Partida f=new Partida(out,in,(String)prot.getCuerpo(),soc);
 		  		lista.add(f);
 		  		f.start();
 		  	}
 		  	if(prot.getTipo().equals("Unirse")) {
-		  		
+		  		Partida p=null;
 		  		Integer l=	(Integer)(prot.getCuerpo());
 		
 		  		for(int i=0;i<lista.size();i++) {
 		  			if(lista.get(i).numero()==l) {
-		  				 prot=(Protocolo)in.readObject();
-		  				 Partida p=lista.remove(i);
-		  				 p.unirjugador(out,in,(String)prot.getCuerpo());
-		  				visita.add(p);
-		  				
+		 				  p=lista.remove(i);
+		 			
+		  				break;
 		  			}
 		  		}
+		  		
+		  		if(p!=null) {
+		  			out.writeObject(new Protocolo<String>("OK", null));
+		  			out.flush();
+		  			 prot=(Protocolo)in.readObject();
+	  				 p.unirjugador(out,in,(String)prot.getCuerpo(),soc);
+	  				visita.add(p);
+		  			
+		  		}else {
+		  			out.writeObject(new Protocolo<String>("Error", null));
+		  			out.flush();
+		  		}
+		  
 		  	
 		  	
 		  	
@@ -81,6 +93,7 @@ private static List<Partida> visita=new ArrayList<Partida>();
 	  			List<Integer> listapart=new ArrayList<Integer>();
 	  			int tam=lista.size();
 	  			for(int i=0;i<tam;i++) {
+	  				if(lista.get(i).isvivo())
 	  				listapart.add((lista.get(i).numero()));	
 	  			}
 	  			out.writeObject(new Protocolo<List<Integer>>("OK",listapart));
@@ -95,11 +108,14 @@ private static List<Partida> visita=new ArrayList<Partida>();
 	  			List<Integer> listapart=new ArrayList<Integer>();
 	  			int tam=visita.size();
 	  			for(int i=0;i<tam;i++) {
+	  				if(visita.get(i).isvivo())
 	  				listapart.add((visita.get(i).numero()));	
 	  			}
 	  			out.writeObject(new Protocolo<List<Integer>>("Partidas",listapart));
 	  			out.flush();
-
+	  			out.close();
+	  			in.close();
+	  			soc.close();
 
 	  	}
 		  	
