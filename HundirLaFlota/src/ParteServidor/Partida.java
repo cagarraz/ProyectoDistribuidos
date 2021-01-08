@@ -149,7 +149,10 @@ public class Partida extends Thread{
 //					out1.flush();
 //					out2.writeObject(new Protocolo<String>("Listas",""));
 //					out2.flush();
-//							
+//	
+			//esta linea esta echa para practicar con await 
+			//seria mas correcto que el objecto iniciara con el run cuando se una el otro jugador
+			
 			this.barcojug1=	((Protocolo<List<Posicion>>)in1.readObject()).getCuerpo();
 				
 			this.barcojug2=((Protocolo<List<Posicion>>)in2.readObject()).getCuerpo();
