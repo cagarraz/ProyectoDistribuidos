@@ -21,6 +21,7 @@ public class PartidaVisitante {
 		this.in1=in1;
 		this.par=par;
 		try {
+
 			this.par.cuentalista.await();
 		out1.writeObject(new Protocolo<List<Posicion>>("Jugador1",  this.par.getBarcojug2guard()));
 		out1.writeObject(new Protocolo<List<Posicion>>("Jugador2", this.par.getBarcojug1guard()));
