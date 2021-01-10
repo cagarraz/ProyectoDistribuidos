@@ -62,6 +62,7 @@ private static List<Partida> visita=new ArrayList<Partida>();
 		  		Partida p=null;
 		  		Integer l=	(Integer)(prot.getCuerpo());
 		
+		  	synchronized (Hilo.class) {
 		  		for(int i=0;i<lista.size();i++) {
 		  			if(lista.get(i).numero()==l) {
 		 				  p=lista.remove(i);
@@ -69,6 +70,8 @@ private static List<Partida> visita=new ArrayList<Partida>();
 		  				break;
 		  			}
 		  		}
+			}
+		  		
 		  		
 		  		if(p!=null) {
 		  			out.writeObject(new Protocolo<String>("OK", null));
