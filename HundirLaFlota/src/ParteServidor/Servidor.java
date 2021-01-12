@@ -24,8 +24,12 @@ public class Servidor {
 		
 
 	while (true) {
+		try {
 		pool.execute(new Hilo(server.accept()));
-		
+		}catch (IOException e){
+			e.printStackTrace();
+			
+		}
 	}
 	} catch (IOException e) {
 		e.printStackTrace();} 
